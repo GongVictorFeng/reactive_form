@@ -4,7 +4,17 @@
     <section>
       <nav>Name/Info</nav>
       <div>
-        <input placeholder="First Name" formControlName="firstName" />
+        <input
+          placeholder="First Name"
+          formControlName="firstName"
+          [class.error]="firstName.invalid && firstName.touched"
+        />
+        <em *ngIf="firstName.errors?.['required'] && firstName.touched">
+          First Name is required
+        </em>
+        <em *ngIf="firstName.errors?.['minlength'] && firstName.touched">
+          First Name must be at least 3 characters
+        </em>
         <input placeholder="Last Name" formControlName="lastName" />
         <input placeholder="Date of Birth" formControlName="dateOfBirth" />
         <div>
@@ -43,15 +53,19 @@
     <section>
       <nav>Address</nav>
       <div>
-        <div class="address">
+        <div
+          class="address"
+          formGroupName="address"
+          [class.error]="address.invalid && address.dirty"
+        >
           <div class="flex-group">
-            <input placeholder="Address" />
+            <input placeholder="Address" formControlName="streetAddress" />
             <img src="/assets/plus-grey-blue.png" class="add" />
           </div>
-          <input placeholder="City" />
-          <input placeholder="State/Region" />
-          <input placeholder="Zip/Postal Code" />
-          <select>
+          <input placeholder="City" formControlName="city" />
+          <input placeholder="State/Region" formControlName="state" />
+          <input placeholder="Zip/Postal Code" formControlName="postalCode" />
+          <select formControlName="addressType">
             <option
               *ngFor="let addressType of addressTypes"
               [value]="addressType.value"
@@ -59,6 +73,9 @@
               {{ addressType.title }}
             </option>
           </select>
+          <em *ngIf="address.invalid && address.dirty"
+            >The address is incompleted</em
+          >
         </div>
       </div>
     </section>
@@ -70,11 +87,17 @@
           rows="5"
           placeholder="Notes"
         ></textarea>
+        <em *ngIf="contactForm.controls.notes.errors?.['restrictedWords']">
+          restricted words found:
+          {{contactForm.controls.notes.errors?.['restrictedWords']}}</em
+        >
       </div>
     </section>
     <div class="buttons">
       <button class="secondary">Cancel</button>
-      <button class="primary" type="submit">Save</button>
+      <button class="primary" type="submit" [disabled]="contactForm.invalid">
+        Save
+      </button>
     </div>
   </form>
 </div>

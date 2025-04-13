@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactsService } from '../contacts/contacts.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { AddressTypes, PhoneTypes } from '../contacts/contact.model';
+import { restrictedWords } from '../validators/restricted-words-validator';
 
 @Component({
   templateUrl: './edit-contact.component.html',
@@ -13,7 +14,7 @@ export class EditContactComponent implements OnInit {
   addressTypes = AddressTypes;
   contactForm = this.fb.nonNullable.group({
     id: '',
-    firstName: '',
+    firstName: ['', [Validators.required, Validators.minLength(3)]],
     lastName: '',
     dateOfBirth: <Date | null>null,
     favoritesRanking: <number | null>null,
@@ -23,13 +24,13 @@ export class EditContactComponent implements OnInit {
       phoneType: '',
     }),
     address: this.fb.nonNullable.group({
-      streetAddress: '',
-      city: '',
-      state: '',
-      postalCode: '',
+      streetAddress: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      postalCode: ['', Validators.required],
       addressType: '',
     }),
-    notes: '',
+    notes: ['', restrictedWords('foo', 'bar')],
   });
 
   constructor(
@@ -49,6 +50,14 @@ export class EditContactComponent implements OnInit {
         }
       },
     });
+  }
+
+  get firstName() {
+    return this.contactForm.controls.firstName;
+  }
+
+  get address() {
+    return this.contactForm.controls.address;
   }
 
   saveContact() {
