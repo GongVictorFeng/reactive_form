@@ -4,6 +4,7 @@
     <section>
       <nav>Name/Info</nav>
       <div>
+        <con-profile-icon-selector formControlName="icon" />
         <input
           placeholder="First Name"
           formControlName="firstName"
@@ -16,7 +17,11 @@
           First Name must be at least 3 characters
         </em>
         <input placeholder="Last Name" formControlName="lastName" />
-        <input placeholder="Date of Birth" formControlName="dateOfBirth" />
+        <input
+          type="date"
+          placeholder="Date of Birth"
+          formControlName="dateOfBirth"
+        />
         <div>
           <span>Favorites Ranking:</span>
           <input
